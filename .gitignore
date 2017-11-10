@@ -1,2 +1,3 @@
-.vagrant
-
+# Vagrant generates VM information in .vagrant/ and it should
+# never be committed to version control.
+.vagrant/

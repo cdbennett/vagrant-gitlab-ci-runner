@@ -1,8 +1,10 @@
 # Gitlab CI Runner in Vagrant
 
-Gitlab CI Docker runner in Vagrant. Provisioned by Ansible.
+Gitlab CI Docker runner in Vagrant. Provisioned by shell script.
+Using Debian 9 base box.
 
 - author: Ondrej Sika <ondrej@ondrejsika.com>
+- author: Colin Bennett <colin@gibibit.com>
 - license: [MIT](https://ondrejsika.com/license/mit.txt)
 
 
@@ -11,9 +13,10 @@ Gitlab CI Docker runner in Vagrant. Provisioned by Ansible.
 Installation is super easy. Replace the variables with your config.
 
 ```
-git clone git@github.com:ondrejsika/vagrant-gitlab-ci-runner.git
+git clone git@github.com:cdbennett/vagrant-gitlab-ci-runner.git
 cd vagrant-gitlab-ci-runner
-vagrant up --no-provision
-url=https://gitlab.com/ci token=998e68db76331130c66bc66301751f name=ci-3 vagrant provision
+export GITLAB_URL=http://gitlab.yourdomain.com/
+export GITLAB_RUNNER_TOKEN=xxxxxxxxxxxx
+export GITLAB_RUNNER_NAME=myrunner
+vagrant up
 ```
-
