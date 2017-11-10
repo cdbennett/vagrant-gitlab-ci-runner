@@ -11,9 +11,12 @@ Vagrant.configure(2) do |config|
       "GITLAB_RUNNER_NAME" => ENV["GITLAB_RUNNER_NAME"],
     }
 
-  # Fix VirtualBox networking failure due to NAT DNS.
-  # https://serverfault.com/questions/453185/vagrant-virtualbox-dns-10-0-2-3-not-working
   config.vm.provider :virtualbox do |vb|
+    # Add more RAM.  The default is only 500 MB.
+    vb.memory = "1600"
+
+    # Fix VirtualBox networking failure due to NAT DNS.
+    # https://serverfault.com/questions/453185/vagrant-virtualbox-dns-10-0-2-3-not-working
     vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
   end
 end
