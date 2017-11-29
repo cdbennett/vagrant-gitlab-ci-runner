@@ -39,7 +39,7 @@ END
         --url "$GITLAB_URL" \
         --registration-token "$GITLAB_RUNNER_TOKEN" \
         --name "$GITLAB_RUNNER_NAME" \
-        --tag-list 'docker linux virtualized' \
+        --tag-list 'docker, linux, virtualized' \
         --executor docker --docker-image debian:9
 }
 
