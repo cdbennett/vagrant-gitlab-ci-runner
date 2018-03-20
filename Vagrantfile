@@ -4,7 +4,36 @@
 Vagrant.configure(2) do |config|
   config.vm.box = "debian/stretch64"
 
-  # Install Ansible as the first step
+  # In order to support Docker build jobs that need gigabytes of space
+  # such as Buildroot, add another, larger disk and mount it under
+  # /data and link /var/lib/docker to it.
+  # The debian/stretch64 image has a disk capacity of only about 5 GB.
+  datadisk = File.realpath(".").to_s + "/data.vdi"
+  if ARGV[0] == "up" && !File.exist?(datadisk)
+      config.vm.provider :virtualbox do |vb|
+          puts "Creating data disk #{datadisk}."
+          vb.customize [
+              'createhd',
+              '--filename', datadisk,
+              '--format', 'VDI',
+              '--size', 100 * 1024  # 100 GiB
+          ]
+          vb.customize [
+              'storageattach', :id,
+              '--storagectl', 'SATA Controller',
+              '--port', 1, '--device', 0,
+              '--type', 'hdd', '--medium',
+              datadisk
+          ]
+      end
+
+      # Use a provisioning script to format and mount the disk.
+      config.vm.provision "shell", path: "add-disk.sh"
+
+      # Note: when 'vagrant destroy' is invoked, Vagrant will
+      # delete the datadisk.
+  end
+
   config.vm.provision "shell", path: "provision.sh", env: {
       "GITLAB_URL" => ENV["GITLAB_URL"],
       "GITLAB_RUNNER_TOKEN" => ENV["GITLAB_RUNNER_TOKEN"],
