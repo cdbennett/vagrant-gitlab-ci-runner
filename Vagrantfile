@@ -20,7 +20,6 @@ Vagrant.configure(2) do |config|
   datadisk = File.join(projectdir, "data.vdi")
   if ARGV[0] == "up" && !File.exist?(datadisk)
       config.vm.provider :virtualbox do |vb|
-          puts "Creating data disk #{datadisk}."
           vb.customize [
               'createhd',
               '--filename', datadisk,
