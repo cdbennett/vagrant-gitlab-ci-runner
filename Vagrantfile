@@ -4,11 +4,20 @@
 Vagrant.configure(2) do |config|
   config.vm.box = "debian/stretch64"
 
+  # Disable the default synced folder since it will contain the .vdi
+  # file for the data disk, and we don't want to sync that!
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+
+  # Sync the 'guest' directory.
+  # (No files to sync yet, not added.)
+  #config.vm.synced_folder "guest", "/vagrant", create: true
+
   # In order to support Docker build jobs that need gigabytes of space
   # such as Buildroot, add another, larger disk and mount it under
   # /data and link /var/lib/docker to it.
   # The debian/stretch64 image has a disk capacity of only about 5 GB.
-  datadisk = File.realpath(".").to_s + "/data.vdi"
+  projectdir = File.dirname(File.expand_path(__FILE__))
+  datadisk = File.join(projectdir, "data.vdi")
   if ARGV[0] == "up" && !File.exist?(datadisk)
       config.vm.provider :virtualbox do |vb|
           puts "Creating data disk #{datadisk}."
